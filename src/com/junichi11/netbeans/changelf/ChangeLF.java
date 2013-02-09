@@ -61,9 +61,9 @@ public class ChangeLF implements OnSaveTask {
                             }
                         });
                     }
+                } else {
+                    setLF(kind);
                 }
-            } else {
-                setLF(kind);
             }
         }
     }
