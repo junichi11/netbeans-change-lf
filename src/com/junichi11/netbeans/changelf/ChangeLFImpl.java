@@ -1,27 +1,36 @@
 package com.junichi11.netbeans.changelf;
 
+import com.junichi11.netbeans.changelf.api.ChangeLF;
 import com.junichi11.netbeans.changelf.ui.options.ChangeLFOptions;
 import com.junichi11.netbeans.changelf.ui.wizards.ConfirmationPanel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.spi.editor.document.OnSaveTask;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author junichi11
  */
-public class ChangeLF implements OnSaveTask {
+@ServiceProvider(service = ChangeLF.class)
+public class ChangeLFImpl implements OnSaveTask, ChangeLF {
 
     public static final String LF = "LF"; // NOI18N
     public static final String CR = "CR"; // NOI18N
     public static final String CRLF = "CRLF"; // NOI18N
-    private final Document document;
+    private Document document;
     private static final Map<String, String> LF_KINDS = new HashMap<String, String>();
+    private boolean isForce = false;
+    private boolean useDialog = false;
+    private String lfKind = "";
+    private static final Logger LOGGER = Logger.getLogger(ChangeLFImpl.class.getName());
 
     static {
         LF_KINDS.put(LF, BaseDocument.LS_LF);
@@ -29,26 +38,35 @@ public class ChangeLF implements OnSaveTask {
         LF_KINDS.put(CRLF, BaseDocument.LS_CRLF);
     }
 
-    private ChangeLF(Document document) {
+    public ChangeLFImpl() {
+        this(null);
+    }
+
+    private ChangeLFImpl(Document document) {
         this.document = document;
     }
 
     @Override
     public void performTask() {
         ChangeLFOptions options = ChangeLFOptions.getInstance();
+        if (!isForce) {
+            useDialog = options.useShowDialog();
+            lfKind = LF_KINDS.get(options.getLfKind());
+        }
 
         // user setting is enable
-        if (options.isEnable()) {
+        if (options.isEnable() || isForce) {
             String ls = (String) document.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP);
-            final String kind = LF_KINDS.get(options.getLfKind());
+            final String kind = lfKind;
 
             // compare to current file line feed code
             if (!ls.equals(kind)) {
 
                 // show dialog
-                if (options.useShowDialog()) {
+                if (useDialog) {
                     String currentLS = toLFKindsKeyName(ls);
-                    final String message = "Do you really want to change Line Feed from " + currentLS + " to " + options.getLfKind() + "?";
+                    String changeLS = toLFKindsKeyName(kind);
+                    final String message = "Do you really want to change Line Feed from " + currentLS + " to " + changeLS + "?";
 
                     // check EDT
                     if (SwingUtilities.isEventDispatchThread()) {
@@ -115,12 +133,44 @@ public class ChangeLF implements OnSaveTask {
         return null;
     }
 
+    @Override
+    public void change(Document doc) {
+        change(doc, null, useDialog);
+    }
+
+    @Override
+    public void change(Document doc, TYPE type, boolean useDialog) {
+        if (doc == null) {
+            LOGGER.log(Level.WARNING, "Document is null!");
+            return;
+        }
+        document = doc;
+        if (type != null) {
+            isForce = true;
+            this.useDialog = useDialog;
+            switch (type) {
+                case LF:
+                    lfKind = LF_KINDS.get(LF);
+                    break;
+                case CR:
+                    lfKind = LF_KINDS.get(CR);
+                    break;
+                case CRLF:
+                    lfKind = LF_KINDS.get(CRLF);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
+        performTask();
+    }
+
     @MimeRegistration(mimeType = "", service = OnSaveTask.Factory.class, position = 1500)
     public static final class FactoryImpl implements Factory {
 
         @Override
         public OnSaveTask createTask(Context context) {
-            return new ChangeLF(context.getDocument());
+            return new ChangeLFImpl(context.getDocument());
         }
     }
 }

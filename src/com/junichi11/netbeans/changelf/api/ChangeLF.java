@@ -39,56 +39,41 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package com.junichi11.netbeans.changelf.ui.options;
+package com.junichi11.netbeans.changelf.api;
 
-import com.junichi11.netbeans.changelf.ChangeLFImpl;
-import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
+import javax.swing.text.Document;
 
 /**
  *
  * @author junichi11
  */
-public class ChangeLFOptions {
+public interface ChangeLF {
 
-    private static ChangeLFOptions INSTANCE = new ChangeLFOptions();
-    private static final String CHANGE_LF = "changelf"; // NOI18N
-    private static final String ENABLE = "enable"; // NOI18N
-    private static final String SHOW_DIALOG = "show-dialog"; // NOI18N
-    private static final String LF_KIND = "lf-kind"; // NOI18N
+    public enum TYPE {
 
-    private ChangeLFOptions() {
+        LF,
+        CRLF,
+        CR,
     }
 
-    public static ChangeLFOptions getInstance() {
-        return INSTANCE;
-    }
+    /**
+     * Change line feed code with User settings. User settings: Tools > Options
+     * > Editor > ChangeLF
+     *
+     * Usage:<br>
+     * changeLf = Lookup.getDefault().lookup(ChangeLF.class);
+     * changeLf.change(doc);
+     *
+     * @param doc Document
+     */
+    void change(Document doc);
 
-    public boolean isEnable() {
-        return getPreferences().getBoolean(ENABLE, false);
-    }
-
-    public void setEnable(boolean enable) {
-        getPreferences().putBoolean(ENABLE, enable);
-    }
-
-    public boolean useShowDialog() {
-        return getPreferences().getBoolean(SHOW_DIALOG, false);
-    }
-
-    public void setShowDialog(boolean enable) {
-        getPreferences().putBoolean(SHOW_DIALOG, enable);
-    }
-
-    public String getLfKind() {
-        return getPreferences().get(LF_KIND, ChangeLFImpl.LF); // NOI18N
-    }
-
-    public void setLfKind(String kind) {
-        getPreferences().put(LF_KIND, kind);
-    }
-
-    private Preferences getPreferences() {
-        return NbPreferences.forModule(ChangeLFOptions.class).node(CHANGE_LF);
-    }
+    /**
+     * Change the line feed code to force.
+     *
+     * @param doc Document
+     * @param type LF, CR, CRLF
+     * @param useDialog whether display the dialog window before change lf code.
+     */
+    void change(Document doc, TYPE type, boolean useDialog);
 }
