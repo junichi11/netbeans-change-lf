@@ -42,6 +42,8 @@
 package com.junichi11.netbeans.changelf.api;
 
 import javax.swing.text.Document;
+import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 
 /**
  *
@@ -69,10 +71,13 @@ public interface ChangeLF {
      * Change line feed code with User settings. User settings: Tools > Options
      * > Editor > ChangeLF
      *
-     * Usage:<br>
-     * changeLf = Lookup.getDefault().lookup(ChangeLF.class);
+     * <p>Usage:<br>
+     * <code>
+     * changeLf = Lookup.getDefault().lookup(ChangeLF.class);<br>
      * changeLf.change(doc);
+     * </code></p>
      *
+     * @since 0.2
      * @param doc Document
      */
     void change(Document doc);
@@ -80,6 +85,7 @@ public interface ChangeLF {
     /**
      * Change the line feed code to force.
      *
+     * @since 0.2
      * @param doc Document
      * @param type LF, CR, CRLF
      * @param useDialog whether display the dialog window before change lf code.
@@ -87,9 +93,30 @@ public interface ChangeLF {
     void change(Document doc, TYPE type, boolean useDialog);
 
     /**
-     * Get current line feed code. Return user setting.
+     * Get current line feed code. Return user setting. If line endings is set
+     * on specified project and it is enabled, return it. If project is null or
+     * line endings is not enabled, find global option.
      *
-     * @return current type if enable is checked, otherwise null
+     * @since 0.3
+     * @param project
+     * @return current type if enable is checked, otherwise null.
      */
-    TYPE getCurrentLineFeedCode();
+    TYPE getCurrentLineFeedCode(Project project);
+
+    /**
+     * Get CompositeCategoryProvider.
+     *
+     * <p><code>@ProjectCustomizer.CompositeCategoryProvider.Registration(projectType =
+     * "your_project_path", position = 5000)<br>
+     * public static ProjectCustomizer.CompositeCategoryProvider
+     * createChangeLF() { ChangeLF changeLf =
+     * Lookup.getDefault().lookup(ChangeLF.class); return
+     * changeLf.getCompositCategoryProvider(); }
+     * </code></p>
+     *
+     * @since 0.3
+     * @see ProjectCustomizer.CompositeCategoryProvider
+     * @return ProjectCustomizer.CompositeCategoryProvider instance
+     */
+    ProjectCustomizer.CompositeCategoryProvider getCompositCategoryProvider();
 }

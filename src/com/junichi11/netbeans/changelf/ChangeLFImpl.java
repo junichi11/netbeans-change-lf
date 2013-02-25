@@ -1,6 +1,8 @@
 package com.junichi11.netbeans.changelf;
 
 import com.junichi11.netbeans.changelf.api.ChangeLF;
+import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
+import com.junichi11.netbeans.changelf.ui.options.ChangeLFCustomizerProvider;
 import com.junichi11.netbeans.changelf.ui.options.ChangeLFOptions;
 import com.junichi11.netbeans.changelf.ui.wizards.ConfirmationPanel;
 import java.util.HashMap;
@@ -11,8 +13,13 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.document.OnSaveTask;
+import org.netbeans.spi.project.ui.support.ProjectCustomizer.CompositeCategoryProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -29,6 +36,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     private static final Map<String, String> LF_KINDS = new HashMap<String, String>();
     private boolean isForce = false;
     private boolean useDialog = false;
+    private boolean isEnabled = false;
     private String lfKind = "";
     private static final Logger LOGGER = Logger.getLogger(ChangeLFImpl.class.getName());
 
@@ -50,12 +58,29 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     public void performTask() {
         ChangeLFOptions options = ChangeLFOptions.getInstance();
         if (!isForce) {
-            useDialog = options.useShowDialog();
-            lfKind = LF_KINDS.get(options.getLfKind());
+            Project project = getProject();
+
+            // project properties
+            if (project != null) {
+                if (ChangeLFPreferences.useProject(project)) {
+                    isEnabled = ChangeLFPreferences.isEnable(project);
+                    if (isEnabled) {
+                        useDialog = ChangeLFPreferences.showDialog(project);
+                        lfKind = LF_KINDS.get(ChangeLFPreferences.getLfKind(project));
+                    }
+                }
+            }
+
+            // global options
+            if (!isEnabled) {
+                isEnabled = options.isEnable();
+                useDialog = options.useShowDialog();
+                lfKind = LF_KINDS.get(options.getLfKind());
+            }
         }
 
         // user setting is enable
-        if (options.isEnable() || isForce) {
+        if (isEnabled || isForce) {
             String ls = (String) document.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP);
             final String kind = lfKind;
 
@@ -94,6 +119,12 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     @Override
     public boolean cancel() {
         return true;
+    }
+
+    private Project getProject() {
+        Source source = Source.create(document);
+        FileObject fileObject = source.getFileObject();
+        return FileOwnerQuery.getOwner(fileObject);
     }
 
     /**
@@ -166,7 +197,21 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     }
 
     @Override
-    public TYPE getCurrentLineFeedCode() {
+    public TYPE getCurrentLineFeedCode(Project project) {
+        String lfName = null;
+        // project properties
+        if (project != null) {
+            if (ChangeLFPreferences.useProject(project)) {
+                if (ChangeLFPreferences.isEnable(project)) {
+                    lfName = ChangeLFPreferences.getLfKind(project);
+                }
+            }
+        }
+        if (lfName != null && !lfName.isEmpty()) {
+            return toType(lfName);
+        }
+
+        // global
         ChangeLFOptions options = ChangeLFOptions.getInstance();
 
         // only user checks "enable"
@@ -174,6 +219,11 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
             return toType(options.getLfKind());
         }
         return null;
+    }
+
+    @Override
+    public CompositeCategoryProvider getCompositCategoryProvider() {
+        return ChangeLFCustomizerProvider.createChangeLF();
     }
 
     /**
