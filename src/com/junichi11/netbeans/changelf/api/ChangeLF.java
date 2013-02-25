@@ -51,9 +51,18 @@ public interface ChangeLF {
 
     public enum TYPE {
 
-        LF,
-        CRLF,
-        CR,
+        LF("\n"), // NOI18N
+        CRLF("\r\n"), // NOI18N
+        CR("\r"); // NOI18N
+        private final String lineSeparator;
+
+        private TYPE(String lineSeparator) {
+            this.lineSeparator = lineSeparator;
+        }
+
+        public String getLineSeparator() {
+            return lineSeparator;
+        }
     }
 
     /**
@@ -76,4 +85,11 @@ public interface ChangeLF {
      * @param useDialog whether display the dialog window before change lf code.
      */
     void change(Document doc, TYPE type, boolean useDialog);
+
+    /**
+     * Get current line feed code. Return user setting.
+     *
+     * @return current type if enable is checked, otherwise null
+     */
+    TYPE getCurrentLineFeedCode();
 }

@@ -165,6 +165,37 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
         performTask();
     }
 
+    @Override
+    public TYPE getCurrentLineFeedCode() {
+        ChangeLFOptions options = ChangeLFOptions.getInstance();
+
+        // only user checks "enable"
+        if (options.isEnable()) {
+            return toType(options.getLfKind());
+        }
+        return null;
+    }
+
+    /**
+     * Convert to TYPE from line feed code name.
+     *
+     * @param lfName LF | CR | CRLF
+     * @return TYPE
+     */
+    private TYPE toType(String lfName) {
+        TYPE type = null;
+        if (lfName.equals(LF)) {
+            type = TYPE.LF;
+        } else if (lfName.equals(CR)) {
+            type = TYPE.CR;
+        } else if (lfName.equals(CRLF)) {
+            type = TYPE.CRLF;
+        } else {
+            // do nothing
+        }
+        return type;
+    }
+
     @MimeRegistration(mimeType = "", service = OnSaveTask.Factory.class, position = 1500)
     public static final class FactoryImpl implements Factory {
 
