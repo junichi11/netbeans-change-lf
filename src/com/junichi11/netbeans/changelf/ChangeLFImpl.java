@@ -57,12 +57,14 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     @Override
     public void performTask() {
         ChangeLFOptions options = ChangeLFOptions.getInstance();
+        boolean useProject = false;
         if (!isForce) {
             Project project = getProject();
 
             // project properties
             if (project != null) {
-                if (ChangeLFPreferences.useProject(project)) {
+                useProject = ChangeLFPreferences.useProject(project);
+                if (useProject) {
                     isEnabled = ChangeLFPreferences.isEnable(project);
                     if (isEnabled) {
                         useDialog = ChangeLFPreferences.showDialog(project);
@@ -72,7 +74,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
             }
 
             // global options
-            if (!isEnabled) {
+            if (!useProject && !isEnabled) {
                 isEnabled = options.isEnable();
                 useDialog = options.useShowDialog();
                 lfKind = LF_KINDS.get(options.getLfKind());
@@ -94,7 +96,8 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
                     final String message = "Do you really want to change Line Feed from " + currentLS + " to " + changeLS + "?";
 
                     // check EDT
-                    if (SwingUtilities.isEventDispatchThread()) {
+                    String name = Thread.currentThread().getName();
+                    if (SwingUtilities.isEventDispatchThread() || name.equals("wizard-descriptor-asynchronous-jobs")) { // NOI18N
                         comfirm(message, kind);
                     } else {
                         SwingUtilities.invokeLater(new Runnable() {
