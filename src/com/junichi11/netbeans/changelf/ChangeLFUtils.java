@@ -39,56 +39,28 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package com.junichi11.netbeans.changelf.ui.options;
+package com.junichi11.netbeans.changelf;
 
-import com.junichi11.netbeans.changelf.ChangeLFImpl;
-import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
+import org.netbeans.editor.BaseDocument;
 
 /**
  *
  * @author junichi11
  */
-public class ChangeLFOptions {
+public class ChangeLFUtils {
 
-    private static ChangeLFOptions INSTANCE = new ChangeLFOptions();
-    private static final String CHANGE_LF = "changelf"; // NOI18N
-    private static final String ENABLE = "enable"; // NOI18N
-    private static final String SHOW_DIALOG = "show-dialog"; // NOI18N
-    private static final String LF_KIND = "lf-kind"; // NOI18N
-
-    private ChangeLFOptions() {
+    private ChangeLFUtils() {
     }
 
-    public static ChangeLFOptions getInstance() {
-        return INSTANCE;
-    }
-
-    public boolean isEnable() {
-        return getPreferences().getBoolean(ENABLE, false);
-    }
-
-    public void setEnable(boolean enable) {
-        getPreferences().putBoolean(ENABLE, enable);
-    }
-
-    public boolean useShowDialog() {
-        return getPreferences().getBoolean(SHOW_DIALOG, false);
-    }
-
-    public void setShowDialog(boolean enable) {
-        getPreferences().putBoolean(SHOW_DIALOG, enable);
-    }
-
-    public String getLfKind() {
-        return getPreferences().get(LF_KIND, ChangeLFImpl.LF); // NOI18N
-    }
-
-    public void setLfKind(String kind) {
-        getPreferences().put(LF_KIND, kind);
-    }
-
-    private Preferences getPreferences() {
-        return NbPreferences.forModule(ChangeLFOptions.class).node(CHANGE_LF);
+    public static String toLineFeedCodeName(String lfc) {
+        String name = ""; // NOI18N
+        if (lfc.equals(BaseDocument.LS_LF)) {
+            name = ChangeLFImpl.LF;
+        } else if (lfc.equals(BaseDocument.LS_CR)) {
+            name = ChangeLFImpl.CR;
+        } else if (lfc.equals(BaseDocument.LS_CRLF)) {
+            name = ChangeLFImpl.CRLF;
+        }
+        return name;
     }
 }

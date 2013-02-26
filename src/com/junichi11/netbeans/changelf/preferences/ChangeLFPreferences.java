@@ -39,56 +39,71 @@
  *
  * Portions Copyrighted 2013 Sun Microsystems, Inc.
  */
-package com.junichi11.netbeans.changelf.ui.options;
+package com.junichi11.netbeans.changelf.preferences;
 
 import com.junichi11.netbeans.changelf.ChangeLFImpl;
+import com.junichi11.netbeans.changelf.ChangeLFUtils;
 import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 
 /**
  *
  * @author junichi11
  */
-public class ChangeLFOptions {
+public class ChangeLFPreferences {
 
-    private static ChangeLFOptions INSTANCE = new ChangeLFOptions();
-    private static final String CHANGE_LF = "changelf"; // NOI18N
-    private static final String ENABLE = "enable"; // NOI18N
-    private static final String SHOW_DIALOG = "show-dialog"; // NOI18N
     private static final String LF_KIND = "lf-kind"; // NOI18N
+    private static final String SHOW_DIALOG = "show-dialog"; // NOI18N
+    private static final String USE_GLOBAL = "use-global"; // NOI18N
+    private static final String USE_PROJECT = "use-project"; // NOI18N
+    private static final String ENABLE = "enable"; // NOI18N
 
-    private ChangeLFOptions() {
+    public static boolean isEnable(Project project) {
+        return getPreferences(project).getBoolean(ENABLE, false);
     }
 
-    public static ChangeLFOptions getInstance() {
-        return INSTANCE;
+    public static boolean useGlobal(Project project) {
+        return getPreferences(project).getBoolean(USE_GLOBAL, true);
     }
 
-    public boolean isEnable() {
-        return getPreferences().getBoolean(ENABLE, false);
+    public static boolean useProject(Project project) {
+        return getPreferences(project).getBoolean(USE_PROJECT, false);
     }
 
-    public void setEnable(boolean enable) {
-        getPreferences().putBoolean(ENABLE, enable);
+    public static String getLfKind(Project project) {
+        String name = ChangeLFUtils.toLineFeedCodeName(System.getProperty("line.separator")); // NOI18N
+        if (name.isEmpty()) {
+            name = ChangeLFImpl.LF;
+        }
+        return getPreferences(project).get(LF_KIND, name);
     }
 
-    public boolean useShowDialog() {
-        return getPreferences().getBoolean(SHOW_DIALOG, false);
+    public static boolean showDialog(Project project) {
+        return getPreferences(project).getBoolean(SHOW_DIALOG, false);
     }
 
-    public void setShowDialog(boolean enable) {
-        getPreferences().putBoolean(SHOW_DIALOG, enable);
+    public static void setGlobal(Project project, boolean use) {
+        getPreferences(project).putBoolean(USE_GLOBAL, use);
     }
 
-    public String getLfKind() {
-        return getPreferences().get(LF_KIND, ChangeLFImpl.LF); // NOI18N
+    public static void setProject(Project project, boolean useProject) {
+        getPreferences(project).putBoolean(USE_PROJECT, useProject);
     }
 
-    public void setLfKind(String kind) {
-        getPreferences().put(LF_KIND, kind);
+    public static void setEnable(Project project, boolean enable) {
+        getPreferences(project).putBoolean(ENABLE, enable);
     }
 
-    private Preferences getPreferences() {
-        return NbPreferences.forModule(ChangeLFOptions.class).node(CHANGE_LF);
+    public static void setShowDialog(Project project, boolean useShowDialog) {
+        getPreferences(project).putBoolean(SHOW_DIALOG, useShowDialog);
+    }
+
+    public static void setLfKind(Project project, String lfKind) {
+        getPreferences(project).put(LF_KIND, lfKind);
+    }
+
+    private static Preferences getPreferences(Project project) {
+        return ProjectUtils.getPreferences(project, ChangeLFPreferences.class, true);
     }
 }

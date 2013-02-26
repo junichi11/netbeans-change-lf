@@ -41,7 +41,7 @@
  */
 package com.junichi11.netbeans.changelf.ui.options;
 
-import com.junichi11.netbeans.changelf.ChangeLF;
+import com.junichi11.netbeans.changelf.ChangeLFImpl;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,9 +52,9 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     private static final Set<String> LF_KIND = new HashSet<String>();
 
     static {
-        LF_KIND.add(ChangeLF.LF);
-        LF_KIND.add(ChangeLF.CR);
-        LF_KIND.add(ChangeLF.CRLF);
+        LF_KIND.add(ChangeLFImpl.LF);
+        LF_KIND.add(ChangeLFImpl.CR);
+        LF_KIND.add(ChangeLFImpl.CRLF);
     }
 
     ChangeLFPanel(ChangeLFOptionsPanelController controller) {
