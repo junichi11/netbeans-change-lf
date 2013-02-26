@@ -44,9 +44,12 @@ package com.junichi11.netbeans.changelf.ui.options;
 import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -54,12 +57,20 @@ import org.netbeans.spi.project.ui.support.ProjectCustomizer;
  */
 public class ChangeLFCustomizerPanel extends JPanel {
 
+    private static final long serialVersionUID = 6306423299382770040L;
     private final ProjectCustomizer.Category category;
     private final Project project;
+    private boolean useGlobal = true;
+    private boolean useProject = false;
+    private boolean isEnabled = false;
+    private String lfKindName;
+    private boolean showDialog = false;
+    private static final Logger LOGGER = Logger.getLogger(ChangeLFCustomizerPanel.class.getName());
 
     /**
      * Creates new form ChangeLFCustomizerPanel
      */
+    @NbBundle.Messages("LBL_CanNotFindProjectMessage=Can't find Project!")
     ChangeLFCustomizerPanel(ProjectCustomizer.Category category, Project project) {
         category.setOkButtonListener(new ActionListener() {
             @Override
@@ -76,24 +87,40 @@ public class ChangeLFCustomizerPanel extends JPanel {
                 setProjectOptionGroup(false);
             }
         } else {
-            this.category.setErrorMessage("Can't find Project!");
+            LOGGER.log(Level.INFO, Bundle.LBL_CanNotFindProjectMessage());
+            this.category.setErrorMessage(Bundle.LBL_CanNotFindProjectMessage());
         }
     }
 
     private void load() {
-        useGlobalRadioButton.setSelected(ChangeLFPreferences.useGlobal(project));
-        useProjectRadioButton.setSelected(ChangeLFPreferences.useProject(project));
-        enableCheckBox.setSelected(ChangeLFPreferences.isEnable(project));
-        lfKindComboBox.setSelectedItem(ChangeLFPreferences.getLfKind(project));
-        showDialogCheckBox.setSelected(ChangeLFPreferences.showDialog(project));
+        useGlobal = ChangeLFPreferences.useGlobal(project);
+        useProject = ChangeLFPreferences.useProject(project);
+        isEnabled = ChangeLFPreferences.isEnable(project);
+        lfKindName = ChangeLFPreferences.getLfKind(project);
+        showDialog = ChangeLFPreferences.showDialog(project);
+        useGlobalRadioButton.setSelected(useGlobal);
+        useProjectRadioButton.setSelected(useProject);
+        enableCheckBox.setSelected(isEnabled);
+        lfKindComboBox.setSelectedItem(lfKindName);
+        showDialogCheckBox.setSelected(showDialog);
     }
 
     private void save() {
-        ChangeLFPreferences.setGlobal(project, useGlobal());
-        ChangeLFPreferences.setProject(project, useProject());
-        ChangeLFPreferences.setEnable(project, isEnable());
-        ChangeLFPreferences.setShowDialog(project, useShowDialog());
-        ChangeLFPreferences.setLfKind(project, getLfKind());
+        if (useGlobal() != useGlobal) {
+            ChangeLFPreferences.setGlobal(project, useGlobal());
+        }
+        if (useProject() != useProject) {
+            ChangeLFPreferences.setProject(project, useProject());
+        }
+        if (isEnable() != isEnabled) {
+            ChangeLFPreferences.setEnable(project, isEnable());
+        }
+        if (useShowDialog() != showDialog) {
+            ChangeLFPreferences.setShowDialog(project, useShowDialog());
+        }
+        if (!getLfKind().equals(lfKindName)) {
+            ChangeLFPreferences.setLfKind(project, getLfKind());
+        }
     }
 
     public boolean isEnable() {
