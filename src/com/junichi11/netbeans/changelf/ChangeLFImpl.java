@@ -235,18 +235,33 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
      * @param lfName LF | CR | CRLF
      * @return TYPE
      */
-    private TYPE toType(String lfName) {
-        TYPE type = null;
-        if (lfName.equals(LF)) {
-            type = TYPE.LF;
-        } else if (lfName.equals(CR)) {
-            type = TYPE.CR;
-        } else if (lfName.equals(CRLF)) {
-            type = TYPE.CRLF;
+    public static TYPE toType(String lfName) {
+        if (LF.equals(lfName)) {
+            return TYPE.LF;
+        } else if (CR.equals(lfName)) {
+            return TYPE.CR;
+        } else if (CRLF.equals(lfName)) {
+            return TYPE.CRLF;
         } else {
-            // do nothing
+            return null;
         }
-        return type;
+    }
+
+    public static String fromType(TYPE lfName) {
+        if (lfName == null) {
+            return null;
+        }
+
+        switch (lfName) {
+            case LF:
+                return LF;
+            case CRLF:
+                return CRLF;
+            case CR:
+                return CR;
+            default:
+                throw new AssertionError(lfName.name());
+        }
     }
 
     @MimeRegistration(mimeType = "", service = OnSaveTask.Factory.class, position = 1500)

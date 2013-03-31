@@ -42,25 +42,26 @@
 package com.junichi11.netbeans.changelf.ui.options;
 
 import com.junichi11.netbeans.changelf.ChangeLFImpl;
-import java.util.HashSet;
-import java.util.Set;
+import com.junichi11.netbeans.changelf.api.ChangeLF;
 
 final class ChangeLFPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 5718607844987480654L;
     private final ChangeLFOptionsPanelController controller;
-    private static final Set<String> LF_KIND = new HashSet<String>();
-
-    static {
-        LF_KIND.add(ChangeLFImpl.LF);
-        LF_KIND.add(ChangeLFImpl.CR);
-        LF_KIND.add(ChangeLFImpl.CRLF);
-    }
 
     ChangeLFPanel(ChangeLFOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
         changeEnable(isEnable());
+
+        initCombo();
+        setLfKind(ChangeLF.TYPE.LF);
+    }
+
+    private void initCombo() {
+        for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
+            lfKindComboBox.addItem(new LineEndigsItem(type));
+        }
     }
 
     public boolean isEnable() {
@@ -79,13 +80,14 @@ final class ChangeLFPanel extends javax.swing.JPanel {
         showDialogCheckBox.setSelected(show);
     }
 
-    public String getLfKind() {
-        return lfKindComboBox.getSelectedItem().toString();
+    public ChangeLF.TYPE getLfKind() {
+        LineEndigsItem selected = (LineEndigsItem)lfKindComboBox.getSelectedItem();
+        return selected != null ? selected.type : null;
     }
 
-    public void setLfKind(String kind) {
-        if (LF_KIND.contains(kind)) {
-            lfKindComboBox.setSelectedItem(kind);
+    public void setLfKind(ChangeLF.TYPE kind) {
+        if (kind != null) {
+            lfKindComboBox.setSelectedItem(new LineEndigsItem(kind));
         }
     }
 
@@ -116,8 +118,6 @@ final class ChangeLFPanel extends javax.swing.JPanel {
                 enableCheckBoxActionPerformed(evt);
             }
         });
-
-        lfKindComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "LF", "CR", "CRLF" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(showDialogCheckBox, org.openide.util.NbBundle.getMessage(ChangeLFPanel.class, "ChangeLFPanel.showDialogCheckBox.text")); // NOI18N
 
@@ -153,7 +153,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     void load() {
         ChangeLFOptions options = getOptions();
         setEnable(options.isEnable());
-        setLfKind(options.getLfKind());
+        setLfKind(ChangeLFImpl.toType(options.getLfKind()));
         setShowDialog(options.useShowDialog());
         changeEnable(isEnable());
     }
@@ -162,13 +162,41 @@ final class ChangeLFPanel extends javax.swing.JPanel {
         ChangeLFOptions options = getOptions();
         options.setEnable(isEnable());
         options.setShowDialog(useShowDialog());
-        options.setLfKind(getLfKind());
+        options.setLfKind(ChangeLFImpl.fromType(getLfKind()));
     }
 
     boolean valid() {
         // TODO check whether form is consistent and complete
         return true;
     }
+
+    private static final class LineEndigsItem {
+        public final ChangeLF.TYPE type;
+
+        public LineEndigsItem(ChangeLF.TYPE type) {
+            assert type != null;
+            this.type = type;
+        }
+
+        @Override
+        public int hashCode() {
+            return 265 + type.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
+            final LineEndigsItem other = (LineEndigsItem)obj;
+            return this.type == other.type;
+        }
+
+        @Override
+        public String toString() {
+            return type.getDisplayName();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox enableCheckBox;
     private javax.swing.JComboBox lfKindComboBox;
