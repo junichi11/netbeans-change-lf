@@ -42,18 +42,26 @@
 package com.junichi11.netbeans.changelf.ui.actions;
 
 import com.junichi11.netbeans.changelf.ChangeLFImpl;
-import com.junichi11.netbeans.changelf.ui.options.ChangeLFOptions;
+import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.filesystems.FileObject;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 import org.openide.util.actions.BooleanStateAction;
 
 @ActionID(
@@ -75,8 +83,13 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
     private static final String CRLF_ICON_16 = "com/junichi11/netbeans/changelf/resources/crlf_16.png"; // NOI18N
     private static final String CR_ICON_16 = "com/junichi11/netbeans/changelf/resources/cr_16.png"; // NOI18N
     private static final ToggleEnableChangeLFAction INSTANCE = new ToggleEnableChangeLFAction();
+    private Lookup.Result result;
+    private SettingState settingState;
 
     private ToggleEnableChangeLFAction() {
+        result = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
+        result.addLookupListener(new LookupListenerImpl());
+        settingState = GlobalSettingState.getInstance();
     }
 
     public static ToggleEnableChangeLFAction getInstance() {
@@ -85,9 +98,8 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ChangeLFOptions options = ChangeLFOptions.getInstance();
-        boolean enable = options.isEnable();
-        options.setEnable(!enable);
+        boolean enable = settingState.isEnable();
+        settingState.setEnable(!enable);
         setBooleanState(!enable);
     }
 
@@ -103,16 +115,13 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
 
     @Override
     protected String iconResource() {
-        ChangeLFOptions options = ChangeLFOptions.getInstance();
-        String lfKind = options.getLfKind();
-        return getIconResource(lfKind);
+        return getIconResource(settingState.getLfKind());
     }
 
     @Override
     protected void initialize() {
         super.initialize();
-        ChangeLFOptions options = ChangeLFOptions.getInstance();
-        setBooleanState(options.isEnable());
+        setBooleanState(settingState.isEnable());
     }
 
     /**
@@ -123,6 +132,14 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
         if (icon != null) {
             setIcon(ImageUtilities.loadImageIcon(icon, true));
         }
+    }
+
+    /**
+     * Set icon according to the state.
+     */
+    private void setIcon() {
+        String lfKind = settingState.getLfKind();
+        setIcon(lfKind);
     }
 
     /**
@@ -144,5 +161,63 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
             LOGGER.log(Level.WARNING, Bundle.LBL_NotFoundIconResource());
         }
         return icon;
+    }
+
+    /**
+     * Change state to project or global.
+     *
+     * @param project
+     */
+    public void changeState(Project project) {
+        boolean useGlobal = true;
+        if (project != null) {
+            useGlobal = ChangeLFPreferences.useGlobal(project);
+        }
+        if (useGlobal) {
+            settingState = GlobalSettingState.getInstance();
+        } else {
+            settingState = ProjectSettingState.getInstance(project);
+        }
+        setIcon();
+        setBooleanState(settingState.isEnable());
+    }
+
+    //~ inner class
+    private class LookupListenerImpl implements LookupListener {
+
+        private Project project;
+
+        public LookupListenerImpl() {
+        }
+
+        @Override
+        public void resultChanged(LookupEvent lookupEvent) {
+            FileObject fo = getFileObject(lookupEvent);
+            if (fo != null) {
+                Project tmpProject = FileOwnerQuery.getOwner(fo);
+                if (project == tmpProject) {
+                    return;
+                }
+                project = tmpProject;
+            }
+
+            changeState(project);
+        }
+
+        /**
+         * Get FileObject
+         *
+         * @param lookupEvent
+         * @return current FileObject if exists, otherwise null
+         */
+        private FileObject getFileObject(LookupEvent lookupEvent) {
+            Lookup.Result lookupResult = (Lookup.Result) lookupEvent.getSource();
+            Collection c = lookupResult.allInstances();
+            FileObject fileObject = null;
+            if (!c.isEmpty()) {
+                fileObject = (FileObject) c.iterator().next();
+            }
+            return fileObject;
+        }
     }
 }
