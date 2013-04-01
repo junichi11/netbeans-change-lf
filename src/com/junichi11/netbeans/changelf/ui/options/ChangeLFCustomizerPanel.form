@@ -28,9 +28,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lfKindComboBox" min="-2" pref="141" max="-2" attributes="0"/>
                           <Component id="enableCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="showDialogCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lfKindComboBox" alignment="0" min="-2" pref="185" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

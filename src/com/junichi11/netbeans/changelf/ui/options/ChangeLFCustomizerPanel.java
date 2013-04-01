@@ -99,7 +99,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
     }
 
     private void initCombo() {
-        for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
+        for (ChangeLF.TYPE type : ChangeLF.TYPE.values()) {
             lfKindComboBox.addItem(new LFItem(type));
         }
     }
@@ -145,7 +145,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
     }
 
     public ChangeLF.TYPE getLfKind() {
-        LFItem selected = (LFItem)lfKindComboBox.getSelectedItem();
+        LFItem selected = (LFItem) lfKindComboBox.getSelectedItem();
         return selected != null ? selected.getLFType() : null;
     }
 
@@ -215,9 +215,9 @@ public class ChangeLFCustomizerPanel extends JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(enableCheckBox)
-                            .addComponent(showDialogCheckBox))))
+                            .addComponent(showDialogCheckBox)
+                            .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(

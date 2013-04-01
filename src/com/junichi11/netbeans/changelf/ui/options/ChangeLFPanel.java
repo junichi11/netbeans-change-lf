@@ -59,7 +59,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     }
 
     private void initCombo() {
-        for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
+        for (ChangeLF.TYPE type : ChangeLF.TYPE.values()) {
             lfKindComboBox.addItem(new LFItem(type));
         }
     }
@@ -81,7 +81,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     }
 
     public ChangeLF.TYPE getLfKind() {
-        LFItem selected = (LFItem)lfKindComboBox.getSelectedItem();
+        LFItem selected = (LFItem) lfKindComboBox.getSelectedItem();
         return selected != null ? selected.getLFType() : null;
     }
 
@@ -129,8 +129,8 @@ final class ChangeLFPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(enableCheckBox)
-                    .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(showDialogCheckBox))
+                    .addComponent(showDialogCheckBox)
+                    .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -169,7 +169,6 @@ final class ChangeLFPanel extends javax.swing.JPanel {
         // TODO check whether form is consistent and complete
         return true;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox enableCheckBox;
     private javax.swing.JComboBox lfKindComboBox;
