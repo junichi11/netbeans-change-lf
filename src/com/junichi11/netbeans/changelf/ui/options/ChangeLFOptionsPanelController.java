@@ -53,7 +53,7 @@ import org.openide.util.Lookup;
         displayName = "#AdvancedOption_DisplayName_ChangeLF",
         keywords = "#AdvancedOption_Keywords_ChangeLF",
         keywordsCategory = "Editor/ChangeLF")
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_ChangeLF=Change LF", "AdvancedOption_Keywords_ChangeLF=line feed, lf, crlf, cr"})
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_ChangeLF=Change LF", "AdvancedOption_Keywords_ChangeLF=line ending, lf, crlf, cr"})
 public final class ChangeLFOptionsPanelController extends OptionsPanelController {
 
     private ChangeLFPanel panel;

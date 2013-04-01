@@ -41,6 +41,8 @@
  */
 package com.junichi11.netbeans.changelf.ui.options;
 
+import com.junichi11.netbeans.changelf.ChangeLFImpl;
+import com.junichi11.netbeans.changelf.api.ChangeLF;
 import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,7 +65,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
     private boolean useGlobal = true;
     private boolean useProject = false;
     private boolean isEnabled = false;
-    private String lfKindName;
+    private ChangeLF.TYPE lfKindName;
     private boolean showDialog = false;
     private static final Logger LOGGER = Logger.getLogger(ChangeLFCustomizerPanel.class.getName());
 
@@ -80,8 +82,12 @@ public class ChangeLFCustomizerPanel extends JPanel {
         });
         this.category = category;
         this.project = project;
+
         if (project != null) {
             initComponents();
+            initCombo();
+            lfKindComboBox.setSelectedItem(new LFItem(ChangeLF.TYPE.LF));
+
             load();
             if (useGlobalRadioButton.isSelected()) {
                 setProjectOptionGroup(false);
@@ -92,16 +98,25 @@ public class ChangeLFCustomizerPanel extends JPanel {
         }
     }
 
+    private void initCombo() {
+        for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
+            lfKindComboBox.addItem(new LFItem(type));
+        }
+    }
+
     private void load() {
         useGlobal = ChangeLFPreferences.useGlobal(project);
         useProject = ChangeLFPreferences.useProject(project);
         isEnabled = ChangeLFPreferences.isEnable(project);
-        lfKindName = ChangeLFPreferences.getLfKind(project);
+        lfKindName = ChangeLFImpl.toType(ChangeLFPreferences.getLfKind(project));
         showDialog = ChangeLFPreferences.showDialog(project);
+
         useGlobalRadioButton.setSelected(useGlobal);
         useProjectRadioButton.setSelected(useProject);
         enableCheckBox.setSelected(isEnabled);
-        lfKindComboBox.setSelectedItem(lfKindName);
+        if (lfKindName != null) {
+            lfKindComboBox.setSelectedItem(new LFItem(lfKindName));
+        }
         showDialogCheckBox.setSelected(showDialog);
     }
 
@@ -118,8 +133,10 @@ public class ChangeLFCustomizerPanel extends JPanel {
         if (useShowDialog() != showDialog) {
             ChangeLFPreferences.setShowDialog(project, useShowDialog());
         }
-        if (!getLfKind().equals(lfKindName)) {
-            ChangeLFPreferences.setLfKind(project, getLfKind());
+
+        ChangeLF.TYPE selectedLFKind = getLfKind();
+        if (selectedLFKind != lfKindName) {
+            ChangeLFPreferences.setLfKind(project, ChangeLFImpl.fromType(selectedLFKind));
         }
     }
 
@@ -127,8 +144,9 @@ public class ChangeLFCustomizerPanel extends JPanel {
         return enableCheckBox.isSelected();
     }
 
-    public String getLfKind() {
-        return (String) lfKindComboBox.getSelectedItem();
+    public ChangeLF.TYPE getLfKind() {
+        LFItem selected = (LFItem)lfKindComboBox.getSelectedItem();
+        return selected != null ? selected.getLFType() : null;
     }
 
     public boolean useShowDialog() {
@@ -184,8 +202,6 @@ public class ChangeLFCustomizerPanel extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(enableCheckBox, org.openide.util.NbBundle.getMessage(ChangeLFCustomizerPanel.class, "ChangeLFCustomizerPanel.enableCheckBox.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(showDialogCheckBox, org.openide.util.NbBundle.getMessage(ChangeLFCustomizerPanel.class, "ChangeLFCustomizerPanel.showDialogCheckBox.text")); // NOI18N
-
-        lfKindComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "LF", "CR", "CRLF" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
