@@ -20,6 +20,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.document.OnSaveTask;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer.CompositeCategoryProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -93,7 +94,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
                 if (useDialog) {
                     String currentLS = toLFKindsKeyName(ls);
                     String changeLS = toLFKindsKeyName(kind);
-                    final String message = "Do you really want to change Line Feed from " + currentLS + " to " + changeLS + "?";
+                    final String message = NbBundle.getMessage(ChangeLFImpl.class, "ConfirmAdjustLF", currentLS, changeLS);
 
                     // check EDT
                     String name = Thread.currentThread().getName();
