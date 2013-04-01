@@ -1,4 +1,4 @@
-# Change Line Endings Plugin
+# Change Line Endings on Save Plugin
 Change line endings plugin for NetBeans 7.3+
 
 ## Feature
