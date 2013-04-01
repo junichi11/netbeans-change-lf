@@ -86,7 +86,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
         if (project != null) {
             initComponents();
             initCombo();
-            lfKindComboBox.setSelectedItem(new LineEndigsItem(ChangeLF.TYPE.LF));
+            lfKindComboBox.setSelectedItem(new LFItem(ChangeLF.TYPE.LF));
 
             load();
             if (useGlobalRadioButton.isSelected()) {
@@ -100,7 +100,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
 
     private void initCombo() {
         for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
-            lfKindComboBox.addItem(new LineEndigsItem(type));
+            lfKindComboBox.addItem(new LFItem(type));
         }
     }
 
@@ -115,7 +115,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
         useProjectRadioButton.setSelected(useProject);
         enableCheckBox.setSelected(isEnabled);
         if (lfKindName != null) {
-            lfKindComboBox.setSelectedItem(new LineEndigsItem(lfKindName));
+            lfKindComboBox.setSelectedItem(new LFItem(lfKindName));
         }
         showDialogCheckBox.setSelected(showDialog);
     }
@@ -145,8 +145,8 @@ public class ChangeLFCustomizerPanel extends JPanel {
     }
 
     public ChangeLF.TYPE getLfKind() {
-        LineEndigsItem selected = (LineEndigsItem)lfKindComboBox.getSelectedItem();
-        return selected != null ? selected.type : null;
+        LFItem selected = (LFItem)lfKindComboBox.getSelectedItem();
+        return selected != null ? selected.getLFType() : null;
     }
 
     public boolean useShowDialog() {
@@ -165,33 +165,6 @@ public class ChangeLFCustomizerPanel extends JPanel {
         showDialogCheckBox.setEnabled(enabled);
         enableCheckBox.setEnabled(enabled);
         lfKindComboBox.setEnabled(enabled);
-    }
-
-    private static final class LineEndigsItem {
-        public final ChangeLF.TYPE type;
-
-        public LineEndigsItem(ChangeLF.TYPE type) {
-            assert type != null;
-            this.type = type;
-        }
-
-        @Override
-        public int hashCode() {
-            return 265 + type.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) return false;
-            if (getClass() != obj.getClass()) return false;
-            final LineEndigsItem other = (LineEndigsItem)obj;
-            return this.type == other.type;
-        }
-
-        @Override
-        public String toString() {
-            return type.getDisplayName();
-        }
     }
 
     /**

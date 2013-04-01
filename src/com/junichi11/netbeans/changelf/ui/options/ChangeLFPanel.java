@@ -60,7 +60,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
 
     private void initCombo() {
         for (ChangeLF.TYPE type: ChangeLF.TYPE.values()) {
-            lfKindComboBox.addItem(new LineEndigsItem(type));
+            lfKindComboBox.addItem(new LFItem(type));
         }
     }
 
@@ -81,13 +81,13 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     }
 
     public ChangeLF.TYPE getLfKind() {
-        LineEndigsItem selected = (LineEndigsItem)lfKindComboBox.getSelectedItem();
-        return selected != null ? selected.type : null;
+        LFItem selected = (LFItem)lfKindComboBox.getSelectedItem();
+        return selected != null ? selected.getLFType() : null;
     }
 
     public void setLfKind(ChangeLF.TYPE kind) {
         if (kind != null) {
-            lfKindComboBox.setSelectedItem(new LineEndigsItem(kind));
+            lfKindComboBox.setSelectedItem(new LFItem(kind));
         }
     }
 
@@ -168,33 +168,6 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     boolean valid() {
         // TODO check whether form is consistent and complete
         return true;
-    }
-
-    private static final class LineEndigsItem {
-        public final ChangeLF.TYPE type;
-
-        public LineEndigsItem(ChangeLF.TYPE type) {
-            assert type != null;
-            this.type = type;
-        }
-
-        @Override
-        public int hashCode() {
-            return 265 + type.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) return false;
-            if (getClass() != obj.getClass()) return false;
-            final LineEndigsItem other = (LineEndigsItem)obj;
-            return this.type == other.type;
-        }
-
-        @Override
-        public String toString() {
-            return type.getDisplayName();
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
