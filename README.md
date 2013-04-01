@@ -6,7 +6,7 @@ This plugin changes line endings of files to the specified line endings when sav
 
 ## Options
 
-Tools > Options > Editor > Change LF
+Tools > Options > Editor > Line Endings
 
 - Enable adjusting the line endings
 - Line ending kind: LF, CRLF, CR
