@@ -41,13 +41,17 @@
  */
 package com.junichi11.netbeans.changelf.ui.actions;
 
+import com.junichi11.netbeans.changelf.ChangeLFImpl;
 import com.junichi11.netbeans.changelf.ui.options.ChangeLFOptions;
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.BooleanStateAction;
 
@@ -62,9 +66,13 @@ import org.openide.util.actions.BooleanStateAction;
     @ActionReference(path = "Shortcuts", name = "DS-L")
 })
 @Messages("CTL_ToggleEnableChangeLFAction=Toggle enable change LF")
-public final class ToggleEnableChangeLFAction extends BooleanStateAction{
+public final class ToggleEnableChangeLFAction extends BooleanStateAction {
+
     private static final long serialVersionUID = -538737826355249808L;
-    private static final String LF_ICON_16 = "com/junichi11/netbeans/changelf/ui/actions/lf_16.png"; // NOI18N
+    private static final Logger LOGGER = Logger.getLogger(ToggleEnableChangeLFAction.class.getName());
+    private static final String LF_ICON_16 = "com/junichi11/netbeans/changelf/resources/lf_16.png"; // NOI18N
+    private static final String CRLF_ICON_16 = "com/junichi11/netbeans/changelf/resources/crlf_16.png"; // NOI18N
+    private static final String CR_ICON_16 = "com/junichi11/netbeans/changelf/resources/cr_16.png"; // NOI18N
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -86,7 +94,9 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction{
 
     @Override
     protected String iconResource() {
-        return LF_ICON_16;
+        ChangeLFOptions options = ChangeLFOptions.getInstance();
+        String lfKind = options.getLfKind();
+        return getIconResource(lfKind);
     }
 
     @Override
@@ -95,5 +105,25 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction{
         ChangeLFOptions options = ChangeLFOptions.getInstance();
         setBooleanState(options.isEnable());
     }
-    
+
+    /**
+     * Get icon resource for line endings.
+     *
+     * @param lfKind
+     * @return icon resource
+     */
+    @NbBundle.Messages("LBL_NotFoundIconResource=Not found icon resource")
+    public String getIconResource(String lfKind) {
+        String icon = null; // NOI18N
+        if (lfKind.equals(ChangeLFImpl.CR)) {
+            icon = CR_ICON_16;
+        } else if (lfKind.equals(ChangeLFImpl.CRLF)) {
+            icon = CRLF_ICON_16;
+        } else if (lfKind.equals(ChangeLFImpl.LF)) {
+            icon = LF_ICON_16;
+        } else {
+            LOGGER.log(Level.WARNING, Bundle.LBL_NotFoundIconResource());
+        }
+        return icon;
+    }
 }
