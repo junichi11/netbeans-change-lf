@@ -20,6 +20,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.document.OnSaveTask;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer.CompositeCategoryProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -93,7 +94,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
                 if (useDialog) {
                     String currentLS = toLFKindsKeyName(ls);
                     String changeLS = toLFKindsKeyName(kind);
-                    final String message = "Do you really want to change Line Feed from " + currentLS + " to " + changeLS + "?";
+                    final String message = NbBundle.getMessage(ChangeLFImpl.class, "ConfirmAdjustLF", currentLS, changeLS);
 
                     // check EDT
                     String name = Thread.currentThread().getName();
@@ -235,18 +236,33 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
      * @param lfName LF | CR | CRLF
      * @return TYPE
      */
-    private TYPE toType(String lfName) {
-        TYPE type = null;
-        if (lfName.equals(LF)) {
-            type = TYPE.LF;
-        } else if (lfName.equals(CR)) {
-            type = TYPE.CR;
-        } else if (lfName.equals(CRLF)) {
-            type = TYPE.CRLF;
+    public static TYPE toType(String lfName) {
+        if (LF.equals(lfName)) {
+            return TYPE.LF;
+        } else if (CR.equals(lfName)) {
+            return TYPE.CR;
+        } else if (CRLF.equals(lfName)) {
+            return TYPE.CRLF;
         } else {
-            // do nothing
+            return null;
         }
-        return type;
+    }
+
+    public static String fromType(TYPE lfName) {
+        if (lfName == null) {
+            return null;
+        }
+
+        switch (lfName) {
+            case LF:
+                return LF;
+            case CRLF:
+                return CRLF;
+            case CR:
+                return CR;
+            default:
+                throw new AssertionError(lfName.name());
+        }
     }
 
     @MimeRegistration(mimeType = "", service = OnSaveTask.Factory.class, position = 1500)

@@ -52,18 +52,24 @@ import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 public interface ChangeLF {
 
     public enum TYPE {
+        CRLF("Windows (CRLF)", "\r\n"), // NOI18N
+        LF("Unix (LF)", "\n"), // NOI18N
+        CR("Mac OS 9 (CR)", "\r"); // NOI18N
 
-        LF("\n"), // NOI18N
-        CRLF("\r\n"), // NOI18N
-        CR("\r"); // NOI18N
+        private final String displayName;
         private final String lineSeparator;
 
-        private TYPE(String lineSeparator) {
+        private TYPE(String displayName, String lineSeparator) {
+            this.displayName = displayName;
             this.lineSeparator = lineSeparator;
         }
 
         public String getLineSeparator() {
             return lineSeparator;
+        }
+
+        public String getDisplayName() {
+            return displayName;
         }
     }
 
