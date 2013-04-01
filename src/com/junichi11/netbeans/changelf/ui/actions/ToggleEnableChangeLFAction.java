@@ -51,6 +51,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.BooleanStateAction;
@@ -73,6 +74,14 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
     private static final String LF_ICON_16 = "com/junichi11/netbeans/changelf/resources/lf_16.png"; // NOI18N
     private static final String CRLF_ICON_16 = "com/junichi11/netbeans/changelf/resources/crlf_16.png"; // NOI18N
     private static final String CR_ICON_16 = "com/junichi11/netbeans/changelf/resources/cr_16.png"; // NOI18N
+    private static final ToggleEnableChangeLFAction INSTANCE = new ToggleEnableChangeLFAction();
+
+    private ToggleEnableChangeLFAction() {
+    }
+
+    public static ToggleEnableChangeLFAction getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -107,7 +116,17 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
     }
 
     /**
-     * Get icon resource for line endings.
+     * Set icon for LF kind.
+     */
+    public void setIcon(String lfKind) {
+        String icon = getIconResource(lfKind);
+        if (icon != null) {
+            setIcon(ImageUtilities.loadImageIcon(icon, true));
+        }
+    }
+
+    /**
+     * Get icon resource for LF kind.
      *
      * @param lfKind
      * @return icon resource
