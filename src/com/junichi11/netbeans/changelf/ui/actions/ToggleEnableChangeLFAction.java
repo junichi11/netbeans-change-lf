@@ -65,7 +65,7 @@ import org.openide.util.actions.BooleanStateAction;
     @ActionReference(path = "Toolbars/File", position = 500),
     @ActionReference(path = "Shortcuts", name = "DS-L")
 })
-@Messages("CTL_ToggleEnableChangeLFAction=Toggle enable change LF")
+@Messages("CTL_ToggleEnableChangeLFAction=enable/disable line endings")
 public final class ToggleEnableChangeLFAction extends BooleanStateAction {
 
     private static final long serialVersionUID = -538737826355249808L;
