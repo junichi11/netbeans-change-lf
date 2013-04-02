@@ -76,7 +76,7 @@ public class ChangeLFCustomizerProvider implements ProjectCustomizer.CompositeCa
         this.name = name;
     }
 
-    @NbBundle.Messages("LBL_Config_ChangeLF=ChangeLF")
+    @NbBundle.Messages("LBL_Config_ChangeLF=Line Endings")
     @Override
     public Category createCategory(Lookup lkp) {
         return Category.create(CHANGE_LF, Bundle.LBL_Config_ChangeLF(), null);
