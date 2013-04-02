@@ -43,6 +43,7 @@ package com.junichi11.netbeans.changelf.ui.options;
 
 import com.junichi11.netbeans.changelf.ChangeLFImpl;
 import com.junichi11.netbeans.changelf.api.ChangeLF;
+import com.junichi11.netbeans.changelf.ui.actions.ToggleEnableChangeLFAction;
 
 final class ChangeLFPanel extends javax.swing.JPanel {
 
@@ -160,9 +161,15 @@ final class ChangeLFPanel extends javax.swing.JPanel {
 
     void store() {
         ChangeLFOptions options = getOptions();
+        String lfKind = ChangeLFImpl.fromType(getLfKind());
         options.setEnable(isEnable());
         options.setShowDialog(useShowDialog());
-        options.setLfKind(ChangeLFImpl.fromType(getLfKind()));
+        options.setLfKind(lfKind);
+
+        // set to toggle button
+        ToggleEnableChangeLFAction toggleButton = ToggleEnableChangeLFAction.getInstance();
+        toggleButton.setIcon(lfKind);
+        toggleButton.setBooleanState(isEnable());
     }
 
     boolean valid() {

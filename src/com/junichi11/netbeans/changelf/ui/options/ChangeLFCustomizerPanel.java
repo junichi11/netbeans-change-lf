@@ -44,6 +44,7 @@ package com.junichi11.netbeans.changelf.ui.options;
 import com.junichi11.netbeans.changelf.ChangeLFImpl;
 import com.junichi11.netbeans.changelf.api.ChangeLF;
 import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
+import com.junichi11.netbeans.changelf.ui.actions.ToggleEnableChangeLFAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
@@ -138,6 +139,8 @@ public class ChangeLFCustomizerPanel extends JPanel {
         if (selectedLFKind != lfKindName) {
             ChangeLFPreferences.setLfKind(project, ChangeLFImpl.fromType(selectedLFKind));
         }
+        ToggleEnableChangeLFAction toggleButton = ToggleEnableChangeLFAction.getInstance();
+        toggleButton.changeState(project);
     }
 
     public boolean isEnable() {
