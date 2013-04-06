@@ -54,6 +54,8 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -193,13 +195,17 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
         @Override
         public void resultChanged(LookupEvent lookupEvent) {
             FileObject fo = getFileObject(lookupEvent);
+            Project tmpProject = null;
             if (fo != null) {
-                Project tmpProject = FileOwnerQuery.getOwner(fo);
-                if (project == tmpProject) {
-                    return;
-                }
-                project = tmpProject;
+                tmpProject = FileOwnerQuery.getOwner(fo);
             }
+            if (tmpProject == null) {
+                tmpProject = getProject();
+            }
+            if (tmpProject == null || project == tmpProject) {
+                return;
+            }
+            project = tmpProject;
 
             changeState(project);
         }
@@ -218,6 +224,24 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
                 fileObject = (FileObject) c.iterator().next();
             }
             return fileObject;
+        }
+
+        /**
+         * Get Project
+         *
+         * @return current Project if exists, otherwise null
+         */
+        private Project getProject() {
+            Lookup context = Utilities.actionsGlobalContext();
+            Project prj = context.lookup(Project.class);
+            if (prj == null) {
+                Node node = context.lookup(Node.class);
+                DataObject dataObject = node.getLookup().lookup(DataObject.class);
+                FileObject fileObject = dataObject.getPrimaryFile();
+                prj = FileOwnerQuery.getOwner(fileObject);
+            }
+
+            return prj;
         }
     }
 }
