@@ -238,6 +238,9 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
                 Node node = context.lookup(Node.class);
                 if (node != null) {
                     DataObject dataObject = node.getLookup().lookup(DataObject.class);
+                    if (dataObject == null) {
+                        return null;
+                    }
                     FileObject fileObject = dataObject.getPrimaryFile();
                     prj = FileOwnerQuery.getOwner(fileObject);
                 }
