@@ -65,6 +65,7 @@ public class ChangeLFCustomizerProvider implements ProjectCustomizer.CompositeCa
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-j2ee-ejbjarproject", position = 5000),
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-java-j2seproject", position = 5000),
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-maven", position = 5000),
+        @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-cnd-makeproject", position = 5000),
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-php-project", position = 5000),
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-web-project", position = 5000),
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org.netbeans.modules.web.clientproject", position = 5000),})
