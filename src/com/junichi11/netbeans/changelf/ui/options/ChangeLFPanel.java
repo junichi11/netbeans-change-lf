@@ -110,7 +110,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         enableCheckBox = new javax.swing.JCheckBox();
-        lfKindComboBox = new javax.swing.JComboBox();
+        lfKindComboBox = new javax.swing.JComboBox<>();
         showDialogCheckBox = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(enableCheckBox, org.openide.util.NbBundle.getMessage(ChangeLFPanel.class, "ChangeLFPanel.enableCheckBox.text")); // NOI18N
@@ -178,7 +178,7 @@ final class ChangeLFPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox enableCheckBox;
-    private javax.swing.JComboBox lfKindComboBox;
+    private javax.swing.JComboBox<LFItem> lfKindComboBox;
     private javax.swing.JCheckBox showDialogCheckBox;
     // End of variables declaration//GEN-END:variables
 }

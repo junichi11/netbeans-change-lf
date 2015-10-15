@@ -184,7 +184,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
         useProjectRadioButton = new javax.swing.JRadioButton();
         enableCheckBox = new javax.swing.JCheckBox();
         showDialogCheckBox = new javax.swing.JCheckBox();
-        lfKindComboBox = new javax.swing.JComboBox();
+        lfKindComboBox = new javax.swing.JComboBox<>();
 
         buttonGroup1.add(useGlobalRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(useGlobalRadioButton, org.openide.util.NbBundle.getMessage(ChangeLFCustomizerPanel.class, "ChangeLFCustomizerPanel.useGlobalRadioButton.text")); // NOI18N
@@ -250,7 +250,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox enableCheckBox;
-    private javax.swing.JComboBox lfKindComboBox;
+    private javax.swing.JComboBox<LFItem> lfKindComboBox;
     private javax.swing.JCheckBox showDialogCheckBox;
     private javax.swing.JRadioButton useGlobalRadioButton;
     private javax.swing.JRadioButton useProjectRadioButton;
