@@ -85,7 +85,7 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
     private static final String CRLF_ICON_16 = "com/junichi11/netbeans/changelf/resources/crlf_16.png"; // NOI18N
     private static final String CR_ICON_16 = "com/junichi11/netbeans/changelf/resources/cr_16.png"; // NOI18N
     private static final ToggleEnableChangeLFAction INSTANCE = new ToggleEnableChangeLFAction();
-    private Lookup.Result result;
+    private final Lookup.Result result;
     private SettingState settingState;
 
     private ToggleEnableChangeLFAction() {
@@ -153,14 +153,19 @@ public final class ToggleEnableChangeLFAction extends BooleanStateAction {
     @NbBundle.Messages("LBL_NotFoundIconResource=Not found icon resource")
     public String getIconResource(String lfKind) {
         String icon = null; // NOI18N
-        if (lfKind.equals(ChangeLFImpl.CR)) {
-            icon = CR_ICON_16;
-        } else if (lfKind.equals(ChangeLFImpl.CRLF)) {
-            icon = CRLF_ICON_16;
-        } else if (lfKind.equals(ChangeLFImpl.LF)) {
-            icon = LF_ICON_16;
-        } else {
-            LOGGER.log(Level.WARNING, Bundle.LBL_NotFoundIconResource());
+        switch (lfKind) {
+            case ChangeLFImpl.CR:
+                icon = CR_ICON_16;
+                break;
+            case ChangeLFImpl.CRLF:
+                icon = CRLF_ICON_16;
+                break;
+            case ChangeLFImpl.LF:
+                icon = LF_ICON_16;
+                break;
+            default:
+                LOGGER.log(Level.WARNING, Bundle.LBL_NotFoundIconResource());
+                break;
         }
         return icon;
     }

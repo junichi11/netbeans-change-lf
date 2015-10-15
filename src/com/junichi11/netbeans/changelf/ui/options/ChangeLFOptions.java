@@ -51,7 +51,7 @@ import org.openide.util.NbPreferences;
  */
 public class ChangeLFOptions {
 
-    private static ChangeLFOptions INSTANCE = new ChangeLFOptions();
+    private static final ChangeLFOptions INSTANCE = new ChangeLFOptions();
     private static final String CHANGE_LF = "changelf"; // NOI18N
     private static final String ENABLE = "enable"; // NOI18N
     private static final String SHOW_DIALOG = "show-dialog"; // NOI18N
