@@ -55,7 +55,7 @@ import org.openide.util.NbBundle;
 public class ChangeLFCustomizerProvider implements ProjectCustomizer.CompositeCategoryProvider {
 
     private static final String CHANGE_LF = "ChangeLF"; // NOI18N
-    private String name;
+    private final String name;
 
     @ProjectCustomizer.CompositeCategoryProvider.Registrations({
         @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-netbeans-modules-ant-freeform", position = 5000),

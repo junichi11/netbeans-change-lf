@@ -47,19 +47,25 @@ import org.netbeans.editor.BaseDocument;
  *
  * @author junichi11
  */
-public class ChangeLFUtils {
+public final class ChangeLFUtils {
 
     private ChangeLFUtils() {
     }
 
     public static String toLineFeedCodeName(String lfc) {
         String name = ""; // NOI18N
-        if (lfc.equals(BaseDocument.LS_LF)) {
-            name = ChangeLFImpl.LF;
-        } else if (lfc.equals(BaseDocument.LS_CR)) {
-            name = ChangeLFImpl.CR;
-        } else if (lfc.equals(BaseDocument.LS_CRLF)) {
-            name = ChangeLFImpl.CRLF;
+        switch (lfc) {
+            case BaseDocument.LS_LF:
+                name = ChangeLFImpl.LF;
+                break;
+            case BaseDocument.LS_CR:
+                name = ChangeLFImpl.CR;
+                break;
+            case BaseDocument.LS_CRLF:
+                name = ChangeLFImpl.CRLF;
+                break;
+            default:
+                break;
         }
         return name;
     }

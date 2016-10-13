@@ -34,11 +34,11 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     public static final String CR = "CR"; // NOI18N
     public static final String CRLF = "CRLF"; // NOI18N
     private Document document;
-    private static final Map<String, String> LF_KINDS = new HashMap<String, String>();
+    private static final Map<String, String> LF_KINDS = new HashMap<>();
     private boolean isForce = false;
     private boolean useDialog = false;
     private boolean isEnabled = false;
-    private String lfKind = "";
+    private String lfKind = ""; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(ChangeLFImpl.class.getName());
 
     static {
@@ -176,7 +176,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
     @Override
     public void change(Document doc, TYPE type, boolean useDialog) {
         if (doc == null) {
-            LOGGER.log(Level.WARNING, "Document is null!");
+            LOGGER.log(Level.WARNING, "Document is null!"); // NOI18N
             return;
         }
         document = doc;
@@ -237,14 +237,18 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
      * @return TYPE
      */
     public static TYPE toType(String lfName) {
-        if (LF.equals(lfName)) {
-            return TYPE.LF;
-        } else if (CR.equals(lfName)) {
-            return TYPE.CR;
-        } else if (CRLF.equals(lfName)) {
-            return TYPE.CRLF;
-        } else {
+        if (null == lfName) {
             return null;
+        }
+        switch (lfName) {
+            case LF:
+                return TYPE.LF;
+            case CR:
+                return TYPE.CR;
+            case CRLF:
+                return TYPE.CRLF;
+            default:
+                return null;
         }
     }
 

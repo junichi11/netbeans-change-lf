@@ -54,7 +54,7 @@ import org.openide.DialogDisplayer;
 public class ConfirmationPanel extends javax.swing.JPanel implements ActionListener {
 
     private static final long serialVersionUID = -1771305507470727378L;
-    private DialogDescriptor descriptor;
+    private final DialogDescriptor descriptor;
     private Dialog dialog;
     private boolean isOK;
 
@@ -115,10 +115,6 @@ public class ConfirmationPanel extends javax.swing.JPanel implements ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == DialogDescriptor.OK_OPTION) {
-            isOK = true;
-        } else {
-            isOK = false;
-        }
+        isOK = e.getSource() == DialogDescriptor.OK_OPTION;
     }
 }
