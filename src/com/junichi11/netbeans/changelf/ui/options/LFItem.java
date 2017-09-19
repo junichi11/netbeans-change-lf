@@ -49,7 +49,7 @@ final class LFItem {
 
     public LFItem(ChangeLF.TYPE type) {
         if (type == null) {
-            throw new NullPointerException("type");
+            throw new NullPointerException("type"); // NOI18N
         }
         this.type = type;
     }

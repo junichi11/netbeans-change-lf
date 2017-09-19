@@ -94,7 +94,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
                 if (useDialog) {
                     String currentLS = toLFKindsKeyName(ls);
                     String changeLS = toLFKindsKeyName(kind);
-                    final String message = NbBundle.getMessage(ChangeLFImpl.class, "ConfirmAdjustLF", currentLS, changeLS);
+                    final String message = NbBundle.getMessage(ChangeLFImpl.class, "ConfirmAdjustLF", currentLS, changeLS); // NOI18N
 
                     // check EDT
                     String name = Thread.currentThread().getName();

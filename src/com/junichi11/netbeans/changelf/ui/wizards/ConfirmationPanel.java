@@ -64,7 +64,7 @@ public class ConfirmationPanel extends javax.swing.JPanel implements ActionListe
     public ConfirmationPanel(String title, String message) {
         initComponents();
         messageLabel.setText(message);
-        descriptor = new DialogDescriptor(this, title, true, this); // NOI18N
+        descriptor = new DialogDescriptor(this, title, true, this);
     }
 
     public boolean showDialog() {
