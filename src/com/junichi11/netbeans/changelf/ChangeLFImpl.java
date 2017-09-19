@@ -101,12 +101,7 @@ public class ChangeLFImpl implements OnSaveTask, ChangeLF {
                     if (SwingUtilities.isEventDispatchThread() || name.equals("wizard-descriptor-asynchronous-jobs")) { // NOI18N
                         comfirm(message, kind);
                     } else {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                comfirm(message, kind);
-                            }
-                        });
+                        SwingUtilities.invokeLater(() -> comfirm(message, kind));
                     }
                 } else {
                     setLF(kind);
