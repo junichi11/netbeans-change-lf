@@ -45,8 +45,6 @@ import com.junichi11.netbeans.changelf.ChangeLFImpl;
 import com.junichi11.netbeans.changelf.api.ChangeLF;
 import com.junichi11.netbeans.changelf.preferences.ChangeLFPreferences;
 import com.junichi11.netbeans.changelf.ui.actions.ToggleEnableChangeLFAction;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -75,12 +73,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
      */
     @NbBundle.Messages("LBL_CanNotFindProjectMessage=Can't find Project!")
     ChangeLFCustomizerPanel(ProjectCustomizer.Category category, Project project) {
-        category.setOkButtonListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                save();
-            }
-        });
+        category.setOkButtonListener(e -> save());
         this.category = category;
         this.project = project;
 
@@ -221,7 +214,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
                             .addComponent(enableCheckBox)
                             .addComponent(showDialogCheckBox)
                             .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,7 +229,7 @@ public class ChangeLFCustomizerPanel extends JPanel {
                 .addComponent(lfKindComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showDialogCheckBox)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
