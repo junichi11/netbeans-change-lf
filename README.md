@@ -17,5 +17,9 @@ the specified value when they are saved. If you check the third option and the l
 a file is not the specified line ending, a confirmation dialog is displayed before changing the
 line endings of the file.
 
+## Donation
+
+<a href="https://www.patreon.com/junichi11"><img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" height="50"></a>
+
 ## License
 [Common Development and Distribution License (CDDL) v1.0 and GNU General Public License (GPL) v2](http://netbeans.org/cddl-gplv2.html)
