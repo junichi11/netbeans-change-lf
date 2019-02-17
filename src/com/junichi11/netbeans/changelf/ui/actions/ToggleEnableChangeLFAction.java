@@ -66,16 +66,16 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.actions.BooleanStateAction;
 
-@ActionID(
-        category = "File",
-        id = "com.junichi11.netbeans.changelf.ui.actions.ToggleEnableChangeLFAction")
-@ActionRegistration(
-        lazy = false,
-        displayName = "#CTL_ToggleEnableChangeLFAction")
-@ActionReferences({
-    @ActionReference(path = "Toolbars/File", position = 500),
-    @ActionReference(path = "Shortcuts", name = "DS-L")
-})
+//@ActionID(
+//        category = "File",
+//        id = "com.junichi11.netbeans.changelf.ui.actions.ToggleEnableChangeLFAction")
+//@ActionRegistration(
+//        lazy = false,
+//        displayName = "#CTL_ToggleEnableChangeLFAction")
+//@ActionReferences({
+//    @ActionReference(path = "Toolbars/File", position = 500),
+//    @ActionReference(path = "Shortcuts", name = "DS-L")
+//})
 @Messages("CTL_ToggleEnableChangeLFAction=enable/disable line endings")
 public final class ToggleEnableChangeLFAction extends BooleanStateAction {
 
