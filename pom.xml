@@ -4,7 +4,7 @@
     <groupId>com.junichi11.netbeans.modules</groupId>
     <artifactId>netbeans-change-line-endings-on-save</artifactId>
     <!-- change the version of build.xml -->
-    <version>0.8.0</version>
+    <version>0.9.0</version>
     <packaging>nbm</packaging>
     <name>NetBeans Change Line Endings on Save Plugin</name>
     <url>https://github.com/junichi11/</url>
